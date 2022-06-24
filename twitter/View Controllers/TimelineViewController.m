@@ -62,6 +62,7 @@
     
     cell.tweet = tweet;
     [cell setUpView];
+    [cell refreshData];
     
     
     return cell;

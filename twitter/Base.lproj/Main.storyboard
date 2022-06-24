@@ -130,7 +130,7 @@
                                                     <rect key="frame" x="152" y="79" width="70" height="30"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                    <state key="normal" title="Retweet" image="retweet-icon">
+                                                    <state key="normal" image="retweet-icon">
                                                         <color key="titleColor" systemColor="linkColor"/>
                                                     </state>
                                                     <state key="selected" image="retweet-icon-green"/>

@@ -26,6 +26,37 @@
 - (IBAction)didTapReply:(id)sender {
 }
 - (IBAction)didTapRetweet:(id)sender {
+    if(self.tweet.retweeted == NO){
+        self.tweet.retweeted = YES;
+        self.tweet.retweetCount += 1;
+        [sender setTitle:[NSString stringWithFormat:@"%i", self.tweet.retweetCount] forState:UIControlStateNormal];
+        NSLog(@"Retweeted");
+        [self refreshData];
+        [[APIManager shared] retweet:self.tweet completion:^(Tweet *tweet, NSError *error) {
+             if(error){
+                  NSLog(@"Error retweeting tweet: %@", error.localizedDescription);
+             }
+             else{
+                 NSLog(@"Successfully retweeted the following Tweet: %@", tweet.text);
+             }
+         }];
+    }
+    else{
+        self.tweet.retweeted = NO;
+        self.tweet.retweetCount -= 1;
+        [sender setTitle:[NSString stringWithFormat:@"%i", self.tweet.retweetCount] forState:UIControlStateNormal];
+        NSLog(@"Unretweeted");
+        [self refreshData];
+        [[APIManager shared] retweet:self.tweet completion:^(Tweet *tweet, NSError *error) {
+             if(error){
+                  NSLog(@"Error unretweeting tweet: %@", error.localizedDescription);
+             }
+             else{
+                 NSLog(@"Successfully unretweeted the following Tweet: %@", tweet.text);
+             }
+         }];
+    }
+    
 }
 - (IBAction)didTapLike:(id)sender {
     if(self.tweet.favorited == NO){
@@ -69,6 +100,13 @@
     }
     else{
         [self.likeButton setSelected:NO];
+    }
+    
+    if (self.tweet.retweeted){
+        [self.retweetButton setSelected:YES];
+    }
+    else{
+        [self.retweetButton setSelected:NO];
     }
     
 
