@@ -57,17 +57,11 @@
     
     
     // loading each poster image
-    NSString *URLString = tweet.user.profilePicture;
-    NSURL *url = [NSURL URLWithString:URLString];
-    NSData *urlData = [NSData dataWithContentsOfURL:url];
-    UIImage *image = [UIImage imageWithData:urlData];
+    
 
     
-    cell.tweetTextLabel.text = tweet.text; // labels the cell with text
-    cell.nameLabel.text = tweet.user.name;
-    cell.usernameLabel.text = tweet.user.screenName;
-    cell.profilePicture.image = image;
-    cell.dateLabel.text = tweet.createdAtString;
+    cell.tweet = tweet;
+    [cell setUpView];
     
     
     return cell;
