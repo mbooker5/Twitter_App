@@ -1,25 +1,35 @@
 //
-//  TweetCell.m
+//  DetailsViewController.m
 //  twitter
 //
-//  Created by Maize Booker on 6/21/22.
+//  Created by Maize Booker on 6/24/22.
 //  Copyright © 2022 Emerson Malca. All rights reserved.
 //
 
-#import "TweetCell.h"
+#import "DetailsViewController.h"
 
+@interface DetailsViewController ()
 
-@implementation TweetCell
+@end
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
+@implementation DetailsViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    NSString *URLString = self.tweet.user.profilePicture;
+    NSURL *url = [NSURL URLWithString:URLString];
+    NSData *urlData = [NSData dataWithContentsOfURL:url];
+    UIImage *image = [UIImage imageWithData:urlData];
+    
+    self.detailsImage.image = image;
+    self.detailsName.text = self.tweet.user.name;
+    self.detailsUsername.text = [NSString stringWithFormat:@"%@%@", @"@", self.tweet.user.screenName];
+    self.detailsTweet.text = self.tweet.text;
+    self.detailsDate.text = self.tweet.formattedDate.shortTimeAgoSinceNow;
+    [self.detailsLikeButton setTitle:[NSString stringWithFormat:@"%i", self.tweet.favoriteCount] forState:UIControlStateNormal];
+    [self.detailsRetweetButton setTitle:[NSString stringWithFormat:@"%i", self.tweet.retweetCount] forState:UIControlStateNormal];
+    [self refreshData];
 }
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-}
-
-
 
 - (IBAction)didTapRetweet:(id)sender {
     if(self.tweet.retweeted == NO){
@@ -27,8 +37,8 @@
         self.tweet.retweetCount += 1;
         [sender setTitle:[NSString stringWithFormat:@"%i", self.tweet.retweetCount] forState:UIControlStateNormal];
         NSLog(@"Retweeted");
-        [self refreshData];
-        [[APIManager shared] retweet:self.tweet completion:^(Tweet *tweet, NSError *error) {
+        //[self refreshData];
+        [[APIManager shared] retweet:_tweet completion:^(Tweet *tweet, NSError *error) {
              if(error){
                   NSLog(@"Error retweeting tweet: %@", error.localizedDescription);
              }
@@ -42,8 +52,8 @@
         self.tweet.retweetCount -= 1;
         [sender setTitle:[NSString stringWithFormat:@"%i", self.tweet.retweetCount] forState:UIControlStateNormal];
         NSLog(@"Unretweeted");
-        [self refreshData];
-        [[APIManager shared] unretweet:self.tweet completion:^(Tweet *tweet, NSError *error) {
+        
+        [[APIManager shared] unretweet:_tweet completion:^(Tweet *tweet, NSError *error) {
              if(error){
                   NSLog(@"Error unretweeting tweet: %@", error.localizedDescription);
              }
@@ -52,6 +62,7 @@
              }
          }];
     }
+    [self refreshData];
     
 }
 
@@ -91,41 +102,23 @@
     }
 }
 
-- (IBAction)didTapReply:(id)sender {
-}
+
+
 
 - (void)refreshData{
     if (self.tweet.favorited){
-        [self.likeButton setSelected:YES];
+        [self.detailsLikeButton setSelected:YES];
     }
     else{
-        [self.likeButton setSelected:NO];
+        [self.detailsLikeButton setSelected:NO];
     }
     
     if (self.tweet.retweeted){
-        [self.retweetButton setSelected:YES];
+        [self.detailsRetweetButton setSelected:YES];
     }
     else{
-        [self.retweetButton setSelected:NO];
+        [self.detailsRetweetButton setSelected:NO];
     }
-    
-
-}
-
--(void)setUpView{
-    NSString *URLString = self.tweet.user.profilePicture;
-    NSURL *url = [NSURL URLWithString:URLString];
-    NSData *urlData = [NSData dataWithContentsOfURL:url];
-    UIImage *image = [UIImage imageWithData:urlData];
-    
-    self.tweetTextLabel.text = self.tweet.text; // labels the cell with text
-    self.nameLabel.text = self.tweet.user.name;
-    self.usernameLabel.text = [NSString stringWithFormat:@"%@%@", @"@", self.tweet.user.screenName];
-    self.profilePicture.image = image;
-    self.dateLabel.text = self.tweet.formattedDate.shortTimeAgoSinceNow;
-    [self.likeButton setTitle:[NSString stringWithFormat:@"%i", self.tweet.favoriteCount] forState:UIControlStateNormal];
-    [self.retweetButton setTitle:[NSString stringWithFormat:@"%i", self.tweet.retweetCount] forState:UIControlStateNormal];
-    
 }
 
 @end

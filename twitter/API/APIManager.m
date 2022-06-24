@@ -118,7 +118,7 @@ static NSString * const baseURLString = @"https://api.twitter.com";
 - (void)unretweet:(Tweet *)tweet completion:(void (^)(Tweet *, NSError *))completion {
 
     NSString *json = @".json";
-    NSString *urlString = [@"1.1/statuses/retweet/" stringByAppendingFormat:@"%@%@", tweet.idStr, json];
+    NSString *urlString = [@"1.1/statuses/unretweet/" stringByAppendingFormat:@"%@%@", tweet.idStr, json];
     NSDictionary *parameters = @{@"id": tweet.idStr};
     [self POST:urlString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSDictionary *  _Nullable tweetDictionary) {
         Tweet *tweet = [[Tweet alloc]initWithDictionary:tweetDictionary];

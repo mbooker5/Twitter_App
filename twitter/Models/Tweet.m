@@ -21,8 +21,7 @@
         if (originalTweet != nil) {
             NSDictionary *userDictionary = dictionary[@"user"];
             self.retweetedByUser = [[User alloc] initWithDictionary:userDictionary];
-
-            // Change tweet to original tweet
+            // Changes tweet to original tweet
             dictionary = originalTweet;
         }
         self.idStr = dictionary[@"id_str"];
@@ -32,23 +31,20 @@
         self.retweetCount = [dictionary[@"retweet_count"] intValue];
         self.retweeted = [dictionary[@"retweeted"] boolValue];
 
-        // MARK: initialize user
         NSDictionary *user = dictionary[@"user"];
         self.user = [[User alloc] initWithDictionary:user];
-
-        // TODO: Format and set createdAtString
+        
         NSString *createdAtOriginalString = dictionary[@"created_at"];
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        // Configure the input format to parse the date string
+        // Configures the input format to parse the date string
         formatter.dateFormat = @"E MMM d HH:mm:ss Z y";
-        // Convert String to Date
+        // Converts String to Date
         NSDate *date = [formatter dateFromString:createdAtOriginalString];
-        // Configure output format
+        // Configures output format
         formatter.dateStyle = NSDateFormatterShortStyle;
         formatter.timeStyle = NSDateFormatterNoStyle;
-        // Convert Date to String
+        // Converts Date to String
         self.createdAtString = [formatter stringFromDate:date];
-        
         self.formattedDate = date;
     }
     return self;

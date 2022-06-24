@@ -14,6 +14,7 @@
 #import "TweetCell.h"
 #import "UIImageView+AFNetworking.h"
 #import "ComposeViewController.h"
+#import "DetailsViewController.h"
 
 
 @interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate, ComposeViewControllerDelegate>
@@ -30,21 +31,18 @@
     [super viewDidLoad];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
-    // Initialize a UIRefreshControl
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(beginRefresh) forControlEvents:UIControlEventValueChanged];
     self.tableView.refreshControl = refreshControl;
     [self beginRefresh];
-    
-
+    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
-// Return the number of rows for the table.
+// Returns the number of rows for the table.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section { //required method from UITableViewDataSource
     return self.arrayOfTweets.count; // # of cells
 }
@@ -53,52 +51,38 @@
     TweetCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"TweetCell" forIndexPath:indexPath]; //class constructor
     
     Tweet *tweet = self.arrayOfTweets[indexPath.row];
-   
+    
     cell.tweet = tweet;
     [cell setUpView];
     [cell refreshData];
     
-    
     return cell;
-
 }
 
-// Makes a network request to get updated data
-// Updates the tableView with the new data
-// Hides the RefreshControl
 - (void)beginRefresh {
     
     [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
             self.arrayOfTweets = (NSMutableArray *)tweets;
-            NSLog(@"😎😎😎 Successfully loaded home timeline");
-//            for (Tweet *tweet in tweets) {
-//                //NSString *text = dictionary[@"text"];
-//                //come back to this if tweet text does not load
-//                NSString *text = tweet.text;
-//                NSLog(@"%@", text);
-//            }
-        } else {
-            NSLog(@"😫😫😫 Error getting home timeline: %@", error.localizedDescription);
         }
         [self.tableView reloadData];
         [self.tableView.refreshControl endRefreshing];
     }];
 }
 
-// #pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    UINavigationController *navigationController = [segue destinationViewController];
-    ComposeViewController *composeController = (ComposeViewController*)navigationController.topViewController;
-    composeController.delegate = self;
-    // Pass the selected object to the new view controller.
-    
-    
+    if ([[segue identifier] isEqualToString:@"compose"]){
+        UINavigationController *navigationController = [segue destinationViewController];
+        ComposeViewController *composeController = (ComposeViewController*)navigationController.topViewController;
+        composeController.delegate = self;
+    }
+    else if ([[segue identifier] isEqualToString:@"details"]){
+        NSIndexPath *myIndexPath = [self.tableView indexPathForCell:sender];
+        Tweet *dataToPass = self.arrayOfTweets[myIndexPath.row];
+        DetailsViewController *vc = [segue destinationViewController];
+        vc.tweet = dataToPass;
+    }
 }
-
 
 - (IBAction)didTapLogout:(id)sender {
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
