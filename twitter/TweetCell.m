@@ -8,6 +8,7 @@
 
 #import "TweetCell.h"
 
+
 @implementation TweetCell
 
 - (void)awakeFromNib {
@@ -120,9 +121,9 @@
     
     self.tweetTextLabel.text = self.tweet.text; // labels the cell with text
     self.nameLabel.text = self.tweet.user.name;
-    self.usernameLabel.text = self.tweet.user.screenName;
+    self.usernameLabel.text = [NSString stringWithFormat:@"%@%@", @"@", self.tweet.user.screenName];
     self.profilePicture.image = image;
-    self.dateLabel.text = self.tweet.createdAtString;
+    self.dateLabel.text = self.tweet.formattedDate.shortTimeAgoSinceNow;
     [self.likeButton setTitle:[NSString stringWithFormat:@"%i", self.tweet.favoriteCount] forState:UIControlStateNormal];
     [self.retweetButton setTitle:[NSString stringWithFormat:@"%i", self.tweet.retweetCount] forState:UIControlStateNormal];
     

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Tweet.h"
 #import "APIManager.h"
+#import "DateTools.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

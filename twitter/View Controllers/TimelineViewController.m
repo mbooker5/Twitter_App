@@ -53,13 +53,7 @@
     TweetCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"TweetCell" forIndexPath:indexPath]; //class constructor
     
     Tweet *tweet = self.arrayOfTweets[indexPath.row];
-    // using indexPath
-    
-    
-    // loading each poster image
-    
-
-    
+   
     cell.tweet = tweet;
     [cell setUpView];
     [cell refreshData];
